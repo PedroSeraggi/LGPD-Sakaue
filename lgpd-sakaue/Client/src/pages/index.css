@@ -11,7 +11,7 @@
 .error-message {
     color: rgb(255, 0, 0);
     font-size: 0.8rem;
-    margin-top: 5rem;
+    margin-top: 2.5rem;
     position: absolute;
 }
 
@@ -172,10 +172,6 @@ td, th {
     padding: 12px;
 }
 
-td{
-    cursor: pointer;
-    
-}
 
 tr:hover  td{
    
@@ -187,4 +183,5 @@ tr:hover  td{
     color: rgb(75, 67, 60);
     margin-left: 7px;
     margin-right: 7px;
+    cursor: pointer;
 }
