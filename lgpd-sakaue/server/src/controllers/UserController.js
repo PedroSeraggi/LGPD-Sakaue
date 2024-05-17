@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const RegisterUserUC = require('../useCases/user/RegisterUserUC.js')
-const LoginUserUC = require('../useCases/user/LoginUserUC.js')
-const bcrypt = require('bcrypt')
-const {ListUsers, DeleteUser} = require('../data/repositories/UserRepository.js');
+const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
+const LoginUserUC = require('../useCases/user/LoginUserUC.js');
+const bcrypt = require('bcrypt');
+const { ListUsers, DeleteUser, updateUser } = require('../data/repositories/UserRepository.js')
 
 router.post('/register', async (req, res) => {
-  const salt = await bcrypt.genSalt(10)
+  const salt = await bcrypt.genSalt(10);
   try {
     const email = req.body.email;
-    const password = await bcrypt.hash(req.body.password,salt)
+    const password = await bcrypt.hash(req.body.password, salt);
     const name = req.body.name;
     const cpf = req.body.cpf;
-    const registerUC = new RegisterUserUC(email,password,name,cpf); 
+    const registerUC = new RegisterUserUC(email, password, name, cpf); 
     const newUser = await registerUC.create();
-    if (newUser){
+    if (newUser) {
       res.status(201).json(newUser);
     }
   } catch (error) {
@@ -49,20 +49,27 @@ router.get('/usersList', async (req, res) => {
   }
 });
 
-
-router.delete("/delete/:_id", async (req, res) => {
+router.delete('/delete/:_id', async (req, res) => {
   try {
     const userId = req.params._id;
-    
     const result = await DeleteUser(userId);
-
     res.status(200).json(result);
   } catch (error) {
-    
     console.error(error);
-    res.status(500).json({ error: "Erro interno do servidor" });
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
 
+router.put('/update/:_id', async (req, res) => {
+  try {
+    const userId = req.params._id;
+    const { name, email, cpf } = req.body; 
+    const result = await updateUser(userId, { name, email, cpf }); 
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
 
 module.exports = router;

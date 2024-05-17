@@ -71,11 +71,36 @@ async function DeleteUser(userId) {
 }
 
 
+async function updateUser(userId, userData) {
+  try {
+    // Verificar se o usuário com o ID fornecido existe
+    const existingUser = await User.findById(userId);
+    if (!existingUser) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Atualizar os dados do usuário com os novos dados fornecidos
+    existingUser.name = userData.name;
+    existingUser.email = userData.email;
+    existingUser.cpf = userData.cpf;
+
+    // Salvar as alterações no banco de dados
+    await existingUser.save();
+
+    // Retornar uma mensagem de sucesso
+    return { message: "Usuário atualizado com sucesso" };
+  } catch (error) {
+    // Se ocorrer um erro, logar o erro e retornar um erro 500
+    console.error('Erro ao atualizar usuário:', error);
+    throw new Error('Erro interno do servidor');
+  }
+}
 
 
 module.exports = {
     registerUser,
     loginUser,
+    updateUser,
     ListUsers,
     DeleteUser
 };

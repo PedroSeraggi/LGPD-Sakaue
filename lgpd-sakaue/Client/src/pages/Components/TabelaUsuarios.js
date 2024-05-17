@@ -24,11 +24,67 @@ const TabelaUsuarios = () => {
     // Função para visualizar usuário
   };
 
-  const editarUsuario = (id) => {
-    // Função para editar usuário
+  const editarUsuario = async (id, name, email, cpf) => {
+    try {
+      const { value: formValues } = await Swal.fire({
+        title: 'Editar Usuário',
+        html: `
+          <input id="swal-input1" class="swal2-input" placeholder="Nome" value="${name}">
+          <input id="swal-input2" class="swal2-input" placeholder="Email" value="${email}">
+          <input id="swal-input3" class="swal2-input" placeholder="CPF" value="${cpf}">
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Salvar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+          const name = document.getElementById('swal-input1').value;
+          const email = document.getElementById('swal-input2').value;
+          const cpf = document.getElementById('swal-input3').value;
+          if (!name || !email || !cpf) {
+            Swal.showValidationMessage('Por favor, preencha todos os campos');
+            return false;
+          }
+          return { name, email, cpf };
+        }
+      });
+  
+      if (formValues) {
+        const response = await fetch(`http://localhost:3001/lgpd/users/update/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formValues),
+        });
+  
+        if (response.ok) {
+          fetchUsuarios();
+          Swal.fire(
+            'Atualizado!',
+            'As informações do usuário foram atualizadas.',
+            'success'
+          );
+        } else {
+          console.error('Erro ao atualizar usuário:', response.statusText);
+          Swal.fire(
+            'Erro!',
+            'Houve um problema ao atualizar as informações do usuário.',
+            'error'
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      Swal.fire(
+        'Erro!',
+        'Houve um problema ao atualizar as informações do usuário.',
+        'error'
+      );
+    }
   };
 
-  const removerUsuario = (id) => {
+  const removerUsuario = async (id) => {
     Swal.fire({
       title: 'Tem certeza?',
       text: "Você não poderá reverter isso!",
@@ -90,7 +146,7 @@ const TabelaUsuarios = () => {
               <td>{usuario.cpf}</td>
               <td>
                 <FaEye className="icone" onClick={() => visualizarUsuario(usuario._id)} />
-                <FaPen className="icone" onClick={() => editarUsuario(usuario._id)} />
+                <FaPen className="icone" onClick={() => editarUsuario(usuario._id, usuario.name, usuario.email, usuario.cpf)} />
                 <FaTrash className="icone" onClick={() => removerUsuario(usuario._id)} />
               </td>
             </tr>
