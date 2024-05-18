@@ -3,7 +3,7 @@ const router = express.Router();
 const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
 const LoginUserUC = require('../useCases/user/LoginUserUC.js');
 const bcrypt = require('bcrypt');
-const { ListUsers, DeleteUser, updateUser } = require('../data/repositories/UserRepository.js')
+const { ListUsers, DeleteUser, updateUser, registerUser } = require('../data/repositories/UserRepository.js')
 
 router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
