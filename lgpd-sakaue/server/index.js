@@ -20,6 +20,11 @@ connect()
     const userController = require('./src/controllers/UserController');
     app.use('/lgpd/users', userController);
 
+    
+    const termController = require('./src/controllers/TermController');
+    app.use('/lgpd/terms', termController);
+
+
 
 
     app.listen(PORT, () => {

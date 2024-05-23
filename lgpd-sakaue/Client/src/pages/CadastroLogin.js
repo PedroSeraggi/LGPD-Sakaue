@@ -1,24 +1,37 @@
+import React, { useState } from 'react';
 import './index.css';
 import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
 import * as yup from 'yup';
 import axios from 'axios';
+import TermsModal from './Components/TermosModal';
+
+
 
 const validationCadastro = yup.object().shape({
   email: yup.string().email('Insira um e-mail válido').required('E-mail é obrigatório'),
-  name: yup.string().required('Nome é obrigatório'), 
+  name: yup.string().required('Nome é obrigatório'),
   password: yup.string().required('Senha é obrigatória').min(8, 'Senha deve ter 8 caracteres no mínimo'),
-  cpf: yup.string().required('CPF é obrigatório'), 
+  cpf: yup.string().required('CPF é obrigatório'),
   confirmPassword: yup.string().required('Confirme sua senha').oneOf([yup.ref('password'), null], 'As senhas não são iguais'),
+  consent: yup.bool().oneOf([true], 'Você deve aceitar os termos e condições'),
 });
 
 function CadastroLogin() {
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+
   return (
     <div className='tela'>
       <div className='cadastroBox'>
         <h1>Cadastre-se</h1>
         <Formik
-          initialValues={{ name: '', email: '', password: '', cpf: '', confirmPassword: '' }}
+          initialValues={{ name: '', email: '', password: '', cpf: '', confirmPassword: '', consent: false }}
           validationSchema={validationCadastro}
           onSubmit={async (values, actions) => {
             try {
@@ -27,6 +40,7 @@ function CadastroLogin() {
                 password: values.password,
                 name: values.name,
                 cpf: values.cpf,
+                consent: values.consent,
               });
 
               if (response.status === 201) {
@@ -48,7 +62,7 @@ function CadastroLogin() {
               <div className='InputLogin'>
                 <i><FaUser /></i>
                 <Field name="name" type="text" placeholder='Nome' className="form-field" />
-                {errors.name && touched.name && <div className="error-message">{errors.name}</div>} 
+                {errors.name && touched.name && <div className="error-message">{errors.name}</div>}
               </div>
               <div className='InputLogin'>
                 <i><FaUser /></i>
@@ -70,11 +84,19 @@ function CadastroLogin() {
                 <Field name="confirmPassword" type="password" placeholder='Confirme a Senha' className="form-field" />
                 {errors.confirmPassword && touched.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
               </div>
+              <div className='InputLogin'>
+                <label className='check-consent'>
+                  <Field name="consent" type="checkbox" className="form-check" />
+                   <span onClick={openModal} className="terms-link"> Aceito os termos e condições</span>
+                </label>
+                {errors.consent && touched.consent && <div className="error-message">{errors.consent}</div>}
+              </div>
               <button type="submit" className='BTNLogar'>Criar</button>
               <h5>Já tem conta? <a href="/">Conecte-se</a></h5>
             </Form>
           )}
         </Formik>
+        <TermsModal isOpen={isModalOpen} onClose={closeModal} />
       </div>
     </div>
   );

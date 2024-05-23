@@ -12,7 +12,8 @@ router.post('/register', async (req, res) => {
     const password = await bcrypt.hash(req.body.password, salt);
     const name = req.body.name;
     const cpf = req.body.cpf;
-    const registerUC = new RegisterUserUC(email, password, name, cpf); 
+    const consent = req.body.consent;
+    const registerUC = new RegisterUserUC(email, password, name, cpf, consent); 
     const newUser = await registerUC.create();
     if (newUser) {
       res.status(201).json(newUser);

@@ -1,11 +1,12 @@
 const {registerUser} = require('../../data/repositories/UserRepository.js');
 
 class RegisterUserUC {
-  constructor(email,password,name,cpf) {
+  constructor(email,password,name,cpf,consent) {
     this.email = email;
     this.password = password;
     this.name = name;
     this.cpf = cpf;
+    this.consent = consent;
     
   }
 
@@ -16,6 +17,7 @@ class RegisterUserUC {
         password: this.password,
         name:this.name,
         cpf:this.cpf,
+        consent:this.consent,
         
       };
       

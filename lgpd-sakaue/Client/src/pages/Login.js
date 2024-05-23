@@ -3,7 +3,7 @@ import './index.css';
 import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; 
-import { GoogleLogin } from '@react-oauth/google';
+//import { GoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -33,10 +33,10 @@ function Login() {
     }
   };
 
-  const responseGoogle = (response) => {
-    console.log(response);
-    // Handle the Google response here. You can send the token to your backend for further verification.
-  };
+  // const responseGoogle = (response) => {
+  //   console.log(response);
+  //   // Handle the Google response here. You can send the token to your backend for further verification.
+  // };
 
   return (
     <div className='tela'>
@@ -66,19 +66,14 @@ function Login() {
                 className="form-field" />
             </div>
 
+            
+
             <button type="submit" className='BTNLogar'>Conectar</button>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             <h5>Não tem conta? <a href="/cadastro">Cadastre-se</a></h5>
           </Form>
         </Formik>
-        <GoogleLogin
-          onSuccess={credentialResponse => {
-            responseGoogle(credentialResponse);
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-        />
+     
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   },
 
   consent: {
-    type: String,
+    type: Boolean,
     required: true,
   },
 
@@ -31,9 +31,29 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+const termSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  desc: {
+    type: String,
+  },
+  
+  createData: {
+    type: Date,
+    default: Date.now, 
+    required: true,
+  },
+});
+
+
+
 const User = mongoose.model('User', userSchema);
+const Term = mongoose.model('Term', termSchema);
 
 
 module.exports = {
-  User, userSchema
+  User, userSchema,
+  Term, termSchema
 };
