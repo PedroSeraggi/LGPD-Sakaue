@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaEye, FaPen, FaTrash } from 'react-icons/fa';
+import {FaPen, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import '../index.css';
 
@@ -20,9 +20,7 @@ const TabelaUsuarios = () => {
     fetchUsuarios();
   }, []);
 
-  const visualizarUsuario = (id) => {
-    // Função para visualizar usuário
-  };
+ 
 
   const editarUsuario = async (id, name, email, cpf) => {
     try {
@@ -145,7 +143,7 @@ const TabelaUsuarios = () => {
               <td>{usuario.email}</td>
               <td>{usuario.cpf}</td>
               <td>
-                <FaEye className="icone" onClick={() => visualizarUsuario(usuario._id)} />
+                
                 <FaPen className="icone" onClick={() => editarUsuario(usuario._id, usuario.name, usuario.email, usuario.cpf)} />
                 <FaTrash className="icone" onClick={() => removerUsuario(usuario._id)} />
               </td>

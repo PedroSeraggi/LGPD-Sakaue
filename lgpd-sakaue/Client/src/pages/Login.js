@@ -3,6 +3,7 @@ import './index.css';
 import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; 
+import { GoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -22,16 +23,19 @@ function Login() {
 
       if (!response.ok) {
         throw new Error('Login failed');
-      }else{
+      } else {
         navigate('/tabela');
       }
-      
 
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage('Senha ou Email incorreto');
-    
     }
+  };
+
+  const responseGoogle = (response) => {
+    console.log(response);
+    // Handle the Google response here. You can send the token to your backend for further verification.
   };
 
   return (
@@ -67,10 +71,17 @@ function Login() {
             <h5>Não tem conta? <a href="/cadastro">Cadastre-se</a></h5>
           </Form>
         </Formik>
+        <GoogleLogin
+          onSuccess={credentialResponse => {
+            responseGoogle(credentialResponse);
+          }}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />
       </div>
     </div>
   );
 }
 
 export default Login;
-

@@ -18,6 +18,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  consent: {
+    type: String,
+    required: true,
+  },
+
+  createData: {
+    type: Date,
+    default: Date.now, 
+    required: true,
+  },
 });
 
 const User = mongoose.model('User', userSchema);

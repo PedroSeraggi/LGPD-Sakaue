@@ -18,8 +18,12 @@
     "dotenv": "^16.4.5",
     "expo-font": "~11.10.3",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "react-google-login": "^5.2.2"
   }
 }
