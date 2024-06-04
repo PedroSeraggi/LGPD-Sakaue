@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import './index.css';
 import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; 
-//import { GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogin = async (values) => {
     const { email, password } = values;
@@ -66,14 +68,23 @@ function Login() {
                 className="form-field" />
             </div>
 
-            
+
 
             <button type="submit" className='BTNLogar'>Conectar</button>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             <h5>Não tem conta? <a href="/cadastro">Cadastre-se</a></h5>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                const decoded = jwtDecode(credentialResponse?.credential);
+                console.log(decoded);
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />;
           </Form>
         </Formik>
-     
+
       </div>
     </div>
   );
