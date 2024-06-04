@@ -3,7 +3,7 @@ import './index.css';
 import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
 import * as yup from 'yup';
-import axios from 'axios';
+
 import TermsModal from './Components/TermosModal';
 
 
@@ -25,6 +25,37 @@ function CadastroLogin() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleRegister = async (values, actions) => {
+    try {
+      const response = await fetch(`http://localhost:3001/lgpd/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+          name: values.name,
+          cpf: values.cpf,
+          consent: values.consent,
+        }),
+      });
+  
+      if (response.status === 201) {
+        alert('Usuário registrado com sucesso!');
+        actions.resetForm();
+      } else {
+        alert('Erro ao registrar usuário');
+      }
+    } catch (error) {
+      console.error('Erro ao registrar usuário:', error); 
+      alert('Erro ao registrar usuário');
+    }
+  
+    actions.setSubmitting(false);
+  };
+  
+
 
   return (
     <div className='tela'>
@@ -33,30 +64,9 @@ function CadastroLogin() {
         <Formik
           initialValues={{ name: '', email: '', password: '', cpf: '', confirmPassword: '', consent: false }}
           validationSchema={validationCadastro}
-          onSubmit={async (values, actions) => {
-            try {
-              const response = await axios.post('http://localhost:3001/lgpd/users/register', {
-                email: values.email,
-                password: values.password,
-                name: values.name,
-                cpf: values.cpf,
-                consent: values.consent,
-              });
-
-              if (response.status === 201) {
-                alert('Usuário registrado com sucesso!');
-                actions.resetForm();
-              } else {
-                alert('Erro ao registrar usuário');
-              }
-            } catch (error) {
-              console.error('Erro ao registrar usuário:', error);
-              alert('Erro ao registrar usuário');
-            }
-
-            actions.setSubmitting(false);
-          }}
+          onSubmit={(values, actions) => handleRegister(values, actions)}
         >
+
           {({ errors, touched }) => (
             <Form className="formLogin">
               <div className='InputLogin'>
@@ -87,7 +97,7 @@ function CadastroLogin() {
               <div className='InputLogin'>
                 <label className='check-consent'>
                   <Field name="consent" type="checkbox" className="form-check" />
-                   <span onClick={openModal} className="terms-link"> Aceito os termos e condições</span>
+                  <span onClick={openModal} className="terms-link"> Aceito os termos e condições</span>
                 </label>
                 {errors.consent && touched.consent && <div className="error-message">{errors.consent}</div>}
               </div>

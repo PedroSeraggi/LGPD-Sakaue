@@ -10,9 +10,10 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+
   const handleLogin = async (values) => {
     const { email, password } = values;
-
+  
     try {
       const response = await fetch(`http://localhost:3001/lgpd/users/login`, {
         method: 'POST',
@@ -21,19 +22,28 @@ function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
+  
+      if (response.status === 400) {
+       
+        const userData = { email, password };
 
+        navigate('/aceitarTermos', { state: { userData } });
+        return;
+      }
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Login failed');
       }
-
-      // Redireciona para a página da tabela após o login bem-sucedido
+  
       navigate('/tabela');
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage(error.message || 'Senha ou Email incorreto');
     }
   };
+  
+  
 
   return (
     <div className='tela'>
@@ -46,7 +56,8 @@ function Login() {
             setSubmitting(false); 
           }}
         >
-          {({ isSubmitting }) => ( // Adiciona o parâmetro isSubmitting para verificar se o formulário está sendo submetido
+          
+          {({ isSubmitting }) => ( 
             <Form action="submit" className="formLogin">
               <div className='InputLogin'>
                 <i><FaUser /></i>
@@ -56,11 +67,12 @@ function Login() {
                 <i><FaLock /></i>
                 <Field name="password" type="password" placeholder='Senha' className="form-field" />
               </div>
-              <button type="submit" className='BTNLogar' disabled={isSubmitting}> {/* Desabilita o botão de login enquanto o formulário está sendo submetido */}
+              <button type="submit" className='BTNLogar' disabled={isSubmitting}> 
                 {isSubmitting ? 'Conectando...' : 'Conectar'}
               </button>
               {errorMessage && <div className="error-message">{errorMessage}</div>}
               <h5>Não tem conta? <a href="/cadastro">Cadastre-se</a></h5>
+
               <GoogleLogin
                 onSuccess={credentialResponse => {
                   const decoded = jwtDecode(credentialResponse?.credential);
@@ -69,6 +81,7 @@ function Login() {
                 onError={() => {
                   console.log('Login Failed');
                 }}
+
               />;
             </Form>
           )}

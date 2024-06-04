@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import CadastroLogin from './pages/CadastroLogin';
 import Tabela from './pages/Tabela';
 import Termo from './pages/CadastroTermo';
+import AceitarTermos from './pages/aceitarTermos';
 
 const rootElement = document.getElementById('root');
 
@@ -21,6 +22,7 @@ ReactDOM.render(
           <Route path="/cadastro" element={<CadastroLogin />} />
           <Route path="/tabela" element={<Tabela />} />
           <Route path="/termo" element={<Termo />} />
+          <Route path="/aceitarTermos" element={<AceitarTermos />} />
 
         </Routes>
 

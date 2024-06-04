@@ -32,6 +32,7 @@ const TermsModal = ({ isOpen, onClose }) => {
             <h3>{term.title}</h3>
             <p className='term-disc'>{term.desc}</p>
           </div>
+          
         ))}
         <div className='center'>
         <button onClick={onClose} className="BTNfechar">X</button>

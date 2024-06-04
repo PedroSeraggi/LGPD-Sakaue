@@ -237,6 +237,58 @@ tr:hover  td{
     cursor: pointer;
 }
 
+.termos{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    height: 80%;   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 8px 10px 14px 4px rgba(128, 0, 0, 0.37);
+}
+
+
+.Termo{
+    width: 80%;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom:10px;
+    border: 2px solid rgb(182, 167, 167);
+    padding: 10px;
+    border-radius: 15px;
+    transition: 0.2s all ease-in-out;
+  }
+
+  .Termo:hover{
+    transform: scale(1.05);
+  }
+
+
+  .BTNcancelar{
+    width: 120px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(167, 131, 131);
+    cursor: pointer;
+    font-size: 23px;
+    color: rgb(92, 89, 89);
+}
+.BTNaceitar{
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgb(96, 126, 49);
+    cursor: pointer;
+    font-size: 23px;
+    color: rgb(255, 255, 255);
+    margin-left: 20px;
+}
+
 
 
 /* CSS MODAL TERMOS*/

@@ -131,6 +131,19 @@ async function getUserIdByName(userName) {
       throw new Error('Erro ao buscar usuário pelo nome.');
   }
 }
+async function getUserIdByEmail(userEmail) {
+  try {
+      console.log('Email recebido:', userEmail); // Adicionando console.log para verificar o email recebido
+      const user = await User.findOne({ email: userEmail }).exec();
+      if (!user) {
+          throw new Error('Usuário não encontrado.');
+      }
+      return user._id;
+  } catch (error) {
+      console.error('Erro ao buscar usuário pelo email:', error);
+      throw new Error('Erro ao buscar usuário pelo email.');
+  }
+}
 
 async function getLastTermId() {
     try {
@@ -176,5 +189,6 @@ module.exports = {
     DeleteUser,
     registerTermForUser,
     getUserIdByName,
-    verificationTerm
+    verificationTerm,
+    getUserIdByEmail
 };
