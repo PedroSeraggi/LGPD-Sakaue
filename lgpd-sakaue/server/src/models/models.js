@@ -40,7 +40,7 @@ const termSchema = new mongoose.Schema({
     type: String,
   },
   
-  createData: {
+  createdAt: {
     type: Date,
     default: Date.now, 
     required: true,
@@ -49,11 +49,39 @@ const termSchema = new mongoose.Schema({
 
 
 
+const termRegistrationSchema = new mongoose.Schema({
+  accepted: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+
+  createData: {
+    type: Date,
+    default: Date.now, 
+    required: true,
+  },
+
+  user: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  term: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Term'
+  }]
+}); 
+
+
+
+
 const User = mongoose.model('User', userSchema);
 const Term = mongoose.model('Term', termSchema);
+const TermRegistration = mongoose.model('TermRegistration', termRegistrationSchema);
 
 
 module.exports = {
   User, userSchema,
-  Term, termSchema
+  Term, termSchema,
+  TermRegistration, termRegistrationSchema
 };

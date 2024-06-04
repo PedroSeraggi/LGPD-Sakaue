@@ -1,5 +1,8 @@
-const { User } = require('../../models/models');
 const bcrypt = require('bcrypt')
+const { User } = require('../../models/models');
+const { Term } = require('../../models/models');
+const { TermRegistration } = require('../../models/models');
+
 
 async function registerUser(userData) {
   try {
@@ -97,10 +100,81 @@ async function updateUser(userId, userData) {
 }
 
 
+async function registerTermForUser(userId) {
+  try {
+      const lastTermId = await getLastTermId();
+      const registrationData = {
+          user: userId,
+          term: lastTermId,
+          accepted: true
+      };
+
+      const newRegistration = new TermRegistration(registrationData);
+      await newRegistration.save();
+
+      return newRegistration;
+  } catch (error) {
+      console.error('Erro ao registrar o termo para o usuário:', error);
+      throw new Error('Erro ao registrar o termo para o usuário.');
+  }
+}
+
+async function getUserIdByName(userName) {
+  try {
+      const user = await User.findOne({ name: userName }).exec();
+      if (!user) {
+          throw new Error('Usuário não encontrado.');
+      }
+      return user._id;
+  } catch (error) {
+      console.error('Erro ao buscar usuário pelo nome:', error);
+      throw new Error('Erro ao buscar usuário pelo nome.');
+  }
+}
+
+async function getLastTermId() {
+    try {
+        const lastTerm = await Term.findOne().sort({ createdAt: -1 }).exec();
+        if (!lastTerm) {
+            throw new Error('Nenhum termo encontrado.');
+        }
+        return lastTerm._id;
+    } catch (error) {
+        console.error('Erro ao obter o último ID do termo:', error);
+        throw new Error('Erro ao obter o último ID do termo.');
+    }
+}
+async function verificationTerm(userId) {
+  try {
+    const lastTermId = await getLastTermId();
+
+    if (!lastTermId) {
+      throw new Error('Nenhum ID de termo encontrado.');
+    }
+
+    const lastTerm = await TermRegistration.findOne({ term: lastTermId, user: userId });
+
+    if (!lastTerm) {
+      throw new Error('Nenhum registro encontrado.');
+    }
+
+    return true;
+  } catch (error) {
+    
+    console.error('Erro ao obter o registro :', error);
+    throw new Error('Erro ao obter o último termo.');
+  }
+}
+
+
+
 module.exports = {
     registerUser,
     loginUser,
     updateUser,
     ListUsers,
-    DeleteUser
+    DeleteUser,
+    registerTermForUser,
+    getUserIdByName,
+    verificationTerm
 };

@@ -11,7 +11,7 @@ import TermsModal from './Components/TermosModal';
 const validationCadastro = yup.object().shape({
   email: yup.string().email('Insira um e-mail válido').required('E-mail é obrigatório'),
   name: yup.string().required('Nome é obrigatório'),
-  password: yup.string().required('Senha é obrigatória').min(8, 'Senha deve ter 8 caracteres no mínimo'),
+  password: yup.string().required('Senha é obrigatória').min(1, 'Senha deve ter 8 caracteres no mínimo'),
   cpf: yup.string().required('CPF é obrigatório'),
   confirmPassword: yup.string().required('Confirme sua senha').oneOf([yup.ref('password'), null], 'As senhas não são iguais'),
   consent: yup.bool().oneOf([true], 'Você deve aceitar os termos e condições'),

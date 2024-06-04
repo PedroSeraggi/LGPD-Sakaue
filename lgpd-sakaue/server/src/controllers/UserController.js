@@ -3,7 +3,7 @@ const router = express.Router();
 const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
 const LoginUserUC = require('../useCases/user/LoginUserUC.js');
 const bcrypt = require('bcrypt');
-const { ListUsers, DeleteUser, updateUser, registerUser } = require('../data/repositories/UserRepository.js')
+const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm } = require('../data/repositories/UserRepository.js')
 
 router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
@@ -14,9 +14,12 @@ router.post('/register', async (req, res) => {
     const cpf = req.body.cpf;
     const consent = req.body.consent;
     const registerUC = new RegisterUserUC(email, password, name, cpf, consent); 
-    const newUser = await registerUC.create();
-    if (newUser) {
+    if (consent == true) {
+      const newUser = await registerUC.create();
       res.status(201).json(newUser);
+      const userid = await getUserIdByName(name);
+      const TermRegisrtation = await registerTermForUser(userid);
+      res.status(201).json(TermRegisrtation);
     }
   } catch (error) {
     console.error('Error registering user:', error);
@@ -24,13 +27,26 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const loginUserUC = new LoginUserUC(email, password); 
-    const loggedUser = await loginUserUC.login();
+    const loginUserUC = new LoginUserUC(email, password);
+    const loggedUser = await loginUserUC.login(); 
+
     if (loggedUser) {
-      res.status(200).json(loggedUser); // Login bem-sucedido
+      try {
+        const userId = loggedUser._id;
+        const aceito = await verificationTerm(userId);
+        console.log(aceito)
+        if (aceito) {
+          res.status(200).json(loggedUser); // Login bem-sucedido
+        } else {
+          res.status(400).json({ error: 'Você precisa aceitar o último termo.' }); // Termo não aceito
+        }
+      } catch (error) {
+        res.status(400).json({ error: 'Você precisa aceitar o último termo.' }); // Usuário não aceitou o último termo
+      }
     } else {
       res.status(400).json({ error: 'Usuário ou senha incorretos' }); // Usuário ou senha incorretos
     }
@@ -39,6 +55,10 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' }); // Erro interno do servidor
   }
 });
+
+
+
+
 
 router.get('/usersList', async (req, res) => {
   try {
