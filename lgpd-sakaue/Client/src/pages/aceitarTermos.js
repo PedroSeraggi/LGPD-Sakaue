@@ -57,7 +57,7 @@ const email = userData.email
       }
     } catch (error) {
       console.error('Erro ao aceitar termos:', error);
-      alert('Erro ao aceitar termos');
+      alert('Erro ao aceitar termos'); 
     }
   };
   

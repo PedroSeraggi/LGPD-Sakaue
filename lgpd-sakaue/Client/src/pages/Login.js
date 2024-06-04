@@ -10,10 +10,10 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-
   const handleLogin = async (values) => {
     const { email, password } = values;
   
+    
     try {
       const response = await fetch(`http://localhost:3001/lgpd/users/login`, {
         method: 'POST',
@@ -24,9 +24,7 @@ function Login() {
       });
   
       if (response.status === 400) {
-       
         const userData = { email, password };
-
         navigate('/aceitarTermos', { state: { userData } });
         return;
       }
@@ -36,13 +34,13 @@ function Login() {
         throw new Error(errorData.error || 'Login failed');
       }
   
+        
       navigate('/tabela');
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage(error.message || 'Senha ou Email incorreto');
     }
   };
-  
   
 
   return (
