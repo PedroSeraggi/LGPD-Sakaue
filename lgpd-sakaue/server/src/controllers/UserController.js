@@ -3,30 +3,30 @@ const router = express.Router();
 const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
 const LoginUserUC = require('../useCases/user/LoginUserUC.js');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm, getUserIdByEmail, FindUserByEmail } = require('../data/repositories/UserRepository.js')
 
 router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   try {
-    const email = req.body.email;
-    const password = await bcrypt.hash(req.body.password, salt);
-    const name = req.body.name;
-    const cpf = req.body.cpf;
-    const consent = req.body.consent;
-    const registerUC = new RegisterUserUC(email, password, name, cpf, consent);
-    if (consent == true) {
+    const { email, password, name, cpf, consent } = req.body;
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const registerUC = new RegisterUserUC(email, hashedPassword, name, cpf, consent);
+    if (consent === true) {
       const newUser = await registerUC.create();
-      res.status(201).json(newUser);
-      const userid = await getUserIdByName(name);
-      const TermRegisrtation = await registerTermForUser(userid);
-      res.status(201).json(TermRegisrtation);
+      const userId = await getUserIdByName(name);
+      const termRegistration = await registerTermForUser(userId);
+
+      res.status(201).json({ newUser, termRegistration });
+    } else {
+      res.status(400).json({ error: 'Consent not given' });
     }
   } catch (error) {
     console.error('Error registering user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 
 
@@ -130,5 +130,62 @@ router.get("/perfil/:email", async (req, res) => {
     res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
+
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'pedroseraggiapi@gmail.com',
+    pass: 'duhy aswj nvfp gwkn'
+  }
+});
+
+router.post('/send-email', (req, res) => {
+  const { to, subject, text } = req.body;
+
+  let mailOptions = {
+    from: 'pedroseraggiapi@gmail.com',
+    to: to,
+    subject: subject,
+    text: text
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+    res.status(200).json({ message: 'Email sent: ' + info.response });
+  });
+});
+
+
+router.post('/send-email-to-all', async (req, res) => {
+  const { subject, text } = req.body;
+
+  try {
+    const users = await ListUsers();
+    const emails = users.map(user => user.email);
+
+    let emailPromises = emails.map(email => {
+      let mailOptions = {
+        from: 'pedroseraggiapi@gmail.com',
+        to: email,
+        subject: subject,
+        text: text
+      };
+
+      return transporter.sendMail(mailOptions);
+    });
+
+    await Promise.all(emailPromises);
+
+    res.status(200).json({ message: 'Emails sent to all users' });
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 
 module.exports = router;

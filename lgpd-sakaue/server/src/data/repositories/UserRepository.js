@@ -157,6 +157,20 @@ async function FindUserByEmail(userEmail) {
 }
 
 
+async function getUserIdByEmail(userEmail) {
+  try {
+      console.log('Email recebido:', userEmail); // Adicionando console.log para verificar o email recebido
+      const user = await User.findOne({ email: userEmail }).exec();
+      if (!user) {
+          throw new Error('Usuário não encontrado.');
+      }
+      return user._id;
+  } catch (error) {
+      console.error('Erro ao buscar usuário pelo email:', error);
+      throw new Error('Erro ao buscar usuário pelo email.');
+  }
+}
+
 async function getLastTermId() {
     try {
         const lastTerm = await Term.findOne().sort({ createdAt: -1 }).exec();
@@ -202,5 +216,6 @@ module.exports = {
     registerTermForUser,
     getUserIdByName,
     verificationTerm,
-    FindUserByEmail
+    FindUserByEmail,
+    getUserIdByEmail
 };

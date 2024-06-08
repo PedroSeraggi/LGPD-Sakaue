@@ -8,6 +8,8 @@ import Tabela from './pages/Tabela';
 import Termo from './pages/CadastroTermo';
 import AceitarTermos from './pages/aceitarTermos';
 import Perfil from './pages/Perfil.js';
+import Notificar from './pages/Notificar.js';
+import NotificarTodos from './pages/NotificarTodos.js';
 
 const rootElement = document.getElementById('root');
 
@@ -23,6 +25,8 @@ ReactDOM.render(
             <Route path="/termo" element={<Termo />} />
             <Route path="/aceitarTermos" element={<AceitarTermos />} />
             <Route path="/perfil" element={<Perfil />} />
+            <Route path="/notificar" element={<Notificar />} />
+            <Route path="/notificarTodos" element={<NotificarTodos />} />
           </Routes>
         </Router>
  

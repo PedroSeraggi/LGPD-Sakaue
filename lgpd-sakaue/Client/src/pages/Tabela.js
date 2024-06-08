@@ -1,6 +1,6 @@
 import React from 'react';
 import TabelaUsuarios from './Components/TabelaUsuarios.js';
-import { FaDoorOpen, FaUser } from "react-icons/fa";
+import { FaDoorOpen, FaUser, FaBell } from "react-icons/fa";
 import './index.css';
 import { Link } from 'react-router-dom';
 
@@ -18,7 +18,9 @@ function Tabela() {
         <Link to="/perfil" className='perfil'>
           <FaUser />
         </Link>
-
+        <Link to="/notificar" className='notificarIcon'>
+          <FaBell />
+        </Link>
         <h2>Tabela de Usuários</h2>
         <TabelaUsuarios />
       </div>

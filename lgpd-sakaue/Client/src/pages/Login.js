@@ -36,7 +36,7 @@ function Login() {
       }
   
       localStorage.setItem('email', email)
-      navigate('/login');
+      navigate('/tabela');
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage(error.message || 'Senha ou Email incorreto');

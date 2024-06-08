@@ -53,6 +53,43 @@
     display: flex;
 }
 
+.notificarIcon{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    border: none;
+    position: absolute;
+    left: 32%;
+    top: 13%;
+    background-color: rgb(167, 149, 131);
+    cursor: pointer;
+    font-size: 30px;
+    transition: all 0.2s ease-in-out;
+    color: rgb(71, 65, 58);
+    padding-bottom: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.voltar{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    border: none;
+    position: absolute;
+    left: 32%;
+    top: 13%;
+    background-color: rgb(167, 149, 131);
+    cursor: pointer;
+    font-size: 30px;
+    transition: all 0.2s ease-in-out;
+    color: rgb(71, 65, 58);
+    padding-bottom: 5px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
 
 .BTNfechar{
     width: 50px;
@@ -72,8 +109,14 @@
     display: flex;
 }
 
-.logout:hover{
+.logout:hover, .notificarIcon:hover, .perfil:hover, .voltar:hover
+    {
     background-color: rgb(136, 121, 105);
+}
+
+.NotificarTodosText{
+    font-size: 14px;
+    text-decoration: underline;
 }
 
 .tela {
@@ -375,3 +418,38 @@ tr:hover  td{
 .icon{
     font-size: 50px;
 }
+
+.notificar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.btnNotificar{
+    height: 40px;
+    width: 60%;
+    border-radius: 12px;
+    outline: none;
+    padding: 12px;
+    border: none;
+    background-color: rgb(173, 156, 156);
+    color: white;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+
+
+.btnNotificar:hover{
+    background-color: rgb(146, 125, 125);
+}
+
+
+
+
+
+
+
+

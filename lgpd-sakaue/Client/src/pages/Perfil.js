@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FaUser } from "react-icons/fa";
 import './index.css';
 import Swal from 'sweetalert2';
-
+import { FaArrowLeft } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+
+
 function Perfil() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -150,10 +153,13 @@ function Perfil() {
         ) : (
           <p>Carregando...</p>
         )}
-        <button onClick={editarUsuario}>Editar</button>
+        <button onClick={editarUsuario} className="btnNotificar" >Editar</button>
         {/* Passando uma função de callback para onClick */}
-        <button onClick={() => removerUsuario(userData._id)}>Deletar</button>
+        <button onClick={() => removerUsuario(userData._id)} className="btnNotificar" >Deletar</button>
       </div>
+      <Link to="/tabela" className='voltar'>
+                        <FaArrowLeft />
+                    </Link>
     </div>
   );
 }
