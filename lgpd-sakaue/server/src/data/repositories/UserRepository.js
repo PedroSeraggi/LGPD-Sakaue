@@ -54,6 +54,16 @@ async function ListUsers() {
 }
 
 
+async function FindUserByEmail(userEmail) {
+  try {
+    const user = await User.findOne({email: userEmail});
+    return user;
+  } catch (error) {
+    console.error('Error finding user:', error);
+    throw new Error('Failed to find user');
+  }
+}
+
 async function DeleteUser(userId) {
   try {
     // Tentar encontrar e excluir o parceiro pelo ID
@@ -131,19 +141,21 @@ async function getUserIdByName(userName) {
       throw new Error('Erro ao buscar usuário pelo nome.');
   }
 }
-async function getUserIdByEmail(userEmail) {
+async function FindUserByEmail(userEmail) {
   try {
-      console.log('Email recebido:', userEmail); // Adicionando console.log para verificar o email recebido
-      const user = await User.findOne({ email: userEmail }).exec();
-      if (!user) {
-          throw new Error('Usuário não encontrado.');
-      }
-      return user._id;
+    console.log('Email recebido:', userEmail);
+    const user = await User.findOne({ email: userEmail }).exec();
+    if (!user) {
+      console.log('Usuário não encontrado.');
+      throw new Error('User not found.');
+    }
+    return user;
   } catch (error) {
-      console.error('Erro ao buscar usuário pelo email:', error);
-      throw new Error('Erro ao buscar usuário pelo email.');
+    console.error('Erro ao encontrar usuário por email:', error.message);
+    throw new Error('Erro ao encontrar usuário por email.');
   }
 }
+
 
 async function getLastTermId() {
     try {
@@ -180,7 +192,7 @@ async function verificationTerm(userId) {
 }
 
 
-
+ 
 module.exports = {
     registerUser,
     loginUser,
@@ -190,5 +202,5 @@ module.exports = {
     registerTermForUser,
     getUserIdByName,
     verificationTerm,
-    getUserIdByEmail
+    FindUserByEmail
 };

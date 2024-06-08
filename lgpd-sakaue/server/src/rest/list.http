@@ -1,3 +1,4 @@
-GET http://localhost:3001/lgpd/terms/termsList HTTP/1.1
+GET http://localhost:3001/lgpd/users/perfil/dd@a HTTP/1.1
 content-type: application/json
+
 

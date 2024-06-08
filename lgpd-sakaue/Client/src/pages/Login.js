@@ -25,6 +25,7 @@ function Login() {
   
       if (response.status === 400) {
         const userData = { email, password };
+        
         navigate('/aceitarTermos', { state: { userData } });
         return;
       }
@@ -34,8 +35,8 @@ function Login() {
         throw new Error(errorData.error || 'Login failed');
       }
   
-        
-      navigate('/tabela');
+      localStorage.setItem('email', email)
+      navigate('/login');
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage(error.message || 'Senha ou Email incorreto');

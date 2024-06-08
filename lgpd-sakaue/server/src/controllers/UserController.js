@@ -3,7 +3,7 @@ const router = express.Router();
 const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
 const LoginUserUC = require('../useCases/user/LoginUserUC.js');
 const bcrypt = require('bcrypt');
-const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm, getUserIdByEmail } = require('../data/repositories/UserRepository.js')
+const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm, getUserIdByEmail, FindUserByEmail } = require('../data/repositories/UserRepository.js')
 
 router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
@@ -110,6 +110,24 @@ router.put('/update/:_id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+
+router.get("/perfil/:email", async (req, res) => {
+  try {
+    const email = req.params.email; 
+    console.log('Email recebido no backend:', email); 
+    const parceiro = await FindUserByEmail(email);
+
+    if (parceiro) {
+      res.status(200).json(parceiro);
+    } else {
+      res.status(404).json({ error: "parceiro não encontrado" });
+    }
+  } catch (erro) {
+    console.log(erro);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
 
