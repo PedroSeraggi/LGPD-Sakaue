@@ -4,7 +4,7 @@ import { Formik, Form, Field } from "formik";
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -12,8 +12,7 @@ function Login() {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
-  
-    
+
     try {
       const response = await fetch(`http://localhost:3001/lgpd/users/login`, {
         method: 'POST',
@@ -22,19 +21,19 @@ function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (response.status === 400) {
         const userData = { email, password };
-        
+
         navigate('/aceitarTermos', { state: { userData } });
         return;
       }
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Login failed');
       }
-  
+
       localStorage.setItem('email', email)
       navigate('/tabela');
     } catch (error) {
@@ -42,7 +41,32 @@ function Login() {
       setErrorMessage(error.message || 'Senha ou Email incorreto');
     }
   };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    const { email, name } = decoded;
   
+    try {
+      const response = await fetch(`http://localhost:3001/lgpd/users/google-login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, name }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login with Google failed');
+      }
+  
+      localStorage.setItem('email', email);
+      navigate('/tabela');
+    } catch (error) {
+      console.error('Error logging in with Google:', error);
+      setErrorMessage(error.message || 'Erro ao fazer login com Google');
+    }
+  };
 
   return (
     <div className='tela'>
@@ -52,11 +76,11 @@ function Login() {
           initialValues={{ email: '', password: '' }}
           onSubmit={(values, { setSubmitting }) => {
             handleLogin(values);
-            setSubmitting(false); 
+            setSubmitting(false);
           }}
         >
-          
-          {({ isSubmitting }) => ( 
+
+          {({ isSubmitting }) => (
             <Form action="submit" className="formLogin">
               <div className='InputLogin'>
                 <i><FaUser /></i>
@@ -66,22 +90,18 @@ function Login() {
                 <i><FaLock /></i>
                 <Field name="password" type="password" placeholder='Senha' className="form-field" />
               </div>
-              <button type="submit" className='BTNLogar' disabled={isSubmitting}> 
+              <button type="submit" className='BTNLogar' disabled={isSubmitting}>
                 {isSubmitting ? 'Conectando...' : 'Conectar'}
               </button>
               {errorMessage && <div className="error-message">{errorMessage}</div>}
               <h5>Não tem conta? <a href="/cadastro">Cadastre-se</a></h5>
 
               <GoogleLogin
-                onSuccess={credentialResponse => {
-                  const decoded = jwtDecode(credentialResponse?.credential);
-                  console.log(decoded);
-                }}
+                onSuccess={handleGoogleLoginSuccess}
                 onError={() => {
                   console.log('Login Failed');
                 }}
-
-              />;
+              />
             </Form>
           )}
         </Formik>
@@ -91,3 +111,4 @@ function Login() {
 }
 
 export default Login;
+

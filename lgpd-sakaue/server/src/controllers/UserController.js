@@ -4,7 +4,8 @@ const RegisterUserUC = require('../useCases/user/RegisterUserUC.js');
 const LoginUserUC = require('../useCases/user/LoginUserUC.js');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm, getUserIdByEmail, FindUserByEmail } = require('../data/repositories/UserRepository.js')
+const { ListUsers, DeleteUser, updateUser, registerUser, getUserIdByName, registerTermForUser, verificationTerm, getUserIdByEmail, FindUserByEmail, googleLoginOrRegister } = require('../data/repositories/UserRepository.js')
+const jwt = require('jsonwebtoken');
 
 router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
@@ -186,6 +187,19 @@ router.post('/send-email-to-all', async (req, res) => {
 });
 
 
+router.post('/google-login', async (req, res) => {
+  const { email, name } = req.body;
+
+  try {
+    const user = await googleLoginOrRegister({ email, name });
+    const token = jwt.sign({ id: user._id }, 'seuSegredoJWT'); // Use seu segredo JWT
+
+    res.status(200).json({ token, user });
+  } catch (error) {
+    console.error('Error with Google login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
 
 
 module.exports = router;

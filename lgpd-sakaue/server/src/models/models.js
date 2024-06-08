@@ -7,8 +7,9 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    default: '' 
   },
+
   name: {
     type: String,
     required: true,
@@ -16,7 +17,7 @@ const userSchema = new mongoose.Schema({
 
   cpf: {
     type: String,
-    required: true,
+    default: 'Não definido'
   },
 
   consent: {
@@ -26,7 +27,7 @@ const userSchema = new mongoose.Schema({
 
   createData: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
     required: true,
   },
 });
@@ -39,10 +40,10 @@ const termSchema = new mongoose.Schema({
   desc: {
     type: String,
   },
-  
+
   createdAt: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
     required: true,
   },
 });
@@ -58,7 +59,7 @@ const termRegistrationSchema = new mongoose.Schema({
 
   createData: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
     required: true,
   },
 
@@ -70,7 +71,7 @@ const termRegistrationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Term'
   }]
-}); 
+});
 
 
 

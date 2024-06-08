@@ -205,8 +205,41 @@ async function verificationTerm(userId) {
   }
 }
 
+async function googleLoginOrRegister(userData) {
+  try {
+    let user = await User.findOne({ email: userData.email });
 
- 
+    if (!user) {
+      // Se o usuário não existe, criar um novo
+      user = new User({
+        email: userData.email,
+        name: userData.name,
+        password: '', // Define um valor padrão vazio para o campo password
+        cpf: '', // Define um valor padrão vazio para o campo cpf
+        consent: true // Assumindo que o consentimento é dado pelo login Google
+      });
+      
+      await user.save();
+
+      const lastTermId = await getLastTermId();
+      const registrationData = {
+        user: user._id,
+        term: lastTermId,
+        accepted: true
+      };
+  
+      const newRegistration = new TermRegistration(registrationData);
+      await newRegistration.save();
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error with Google login/register:', error);
+    throw new Error('Failed to login/register user with Google');
+  }
+}
+
+
 module.exports = {
     registerUser,
     loginUser,
@@ -217,5 +250,6 @@ module.exports = {
     getUserIdByName,
     verificationTerm,
     FindUserByEmail,
-    getUserIdByEmail
+    getUserIdByEmail,
+    googleLoginOrRegister
 };
